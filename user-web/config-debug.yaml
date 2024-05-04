@@ -1,0 +1,30 @@
+#name: "user-web"
+#port: 8021
+#
+#user_srv:
+#  host: 192.168.1.101
+#  port: 50051
+#  name: user-srv
+#
+#jwt:
+#  signingKey: 'lkOGRZIJLSZZD7Nr!0xJYf4uU44l81z%'
+#
+#sms:
+#  apikey: 'LTAI5t6qhWgUURgQ5BZdzwCB'
+#  apisecret: 'ju34xudfSMOXbTGwVWpVoSNhQIRR92'
+#  expire: 6000
+#
+#redis:
+#  host: 192.168.1.101
+#  port: 6379
+#
+#consul:
+#  host: 192.168.1.101
+#  port: 8500
+
+
+host: 192.168.1.101
+port: 8848
+namespaceId: 33ca388f-a652-40e1-b98a-df8cb4174367
+dataId: user-web.json
+group: dev
