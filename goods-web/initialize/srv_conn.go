@@ -10,9 +10,10 @@ import (
 	"mxshop-api/goods-web/proto"
 )
 
+// 从consul中服务发现
 func InitSrvConn() {
 	// 负载均衡连接consul中的user-srv服务
-	userConn, err := grpc.Dial(
+	goodsConn, err := grpc.Dial(
 		fmt.Sprintf("consul://%s:%d/%s?wait=14s",
 			global.ServerConfig.ConsulInfo.Host,
 			global.ServerConfig.ConsulInfo.Port, global.ServerConfig.GoodsSrvInfo.Name),
@@ -20,12 +21,13 @@ func InitSrvConn() {
 		grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy": "round_robin"}`),
 	)
 	if err != nil {
-		zap.S().Fatal("[InitSrvConn] 连接【用户服务失败】")
+		zap.S().Fatal("[InitSrvConn] 连接【商品服务失败】")
 	}
 
-	goodsSrvClient := proto.NewGoodsClient(userConn)
+	goodsSrvClient := proto.NewGoodsClient(goodsConn)
 	global.GoodsSrvClient = goodsSrvClient
 }
+
 // 客户端没用负载均衡连接consul的代码
 func InitSrvConn2() {
 	// 从注册中心获取到用户服务的信息
