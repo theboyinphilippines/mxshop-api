@@ -12,7 +12,7 @@ import (
 
 // 从consul中服务发现
 func InitSrvConn() {
-	// 负载均衡连接consul中的user-srv服务
+	// 负载均衡连接consul中的goods-srv服务
 	goodsConn, err := grpc.Dial(
 		fmt.Sprintf("consul://%s:%d/%s?wait=14s",
 			global.ServerConfig.ConsulInfo.Host,

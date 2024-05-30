@@ -1,4 +1,4 @@
-#name: "goods-web"
+#name: "order-web"
 #port: 8021
 #
 #user_srv:
@@ -23,7 +23,7 @@
 #  port: 8500
 
 
-host: 192.168.1.101
+host: 192.168.0.101
 port: 8848
 namespaceId: 15fdf165-b5f4-4a9a-9402-0150e4bc774d
 dataId: goods-web.json

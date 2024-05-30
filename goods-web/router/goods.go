@@ -8,8 +8,8 @@ import (
 )
 
 func InitGoodsRouter(Router *gin.RouterGroup) {
-	GoodsRouter := Router.Group("/goods")
-	zap.S().Info("配置用户相关的日志")
+	GoodsRouter := Router.Group("/order")
+	zap.S().Info("配置商品相关的日志")
 	{
 		GoodsRouter.GET("/list", goods.List)
 		GoodsRouter.POST("/new", middlewares.JWTAuth(), middlewares.IsAdminAuth(), goods.New)

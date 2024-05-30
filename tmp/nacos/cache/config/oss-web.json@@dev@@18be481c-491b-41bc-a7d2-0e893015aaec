@@ -1,7 +1,7 @@
 {
   "name": "oss-web",
-  "host": "192.168.1.101",
-  "port": 8023,
+  "host": "192.168.0.101",
+  "port": 8024,
   "tags":["imooc", "shy", "oss", "web"],
   "jwt": {
     "signingKey": "lkOGRZIJLSZZD7Nr!0xJYf4uU44l81z%"
@@ -14,7 +14,7 @@
     "upload_dir":"mxshop-images/"
   },
   "consul": {
-    "host": "192.168.1.101",
+    "host": "192.168.0.101",
     "port": 8500
   }
 }

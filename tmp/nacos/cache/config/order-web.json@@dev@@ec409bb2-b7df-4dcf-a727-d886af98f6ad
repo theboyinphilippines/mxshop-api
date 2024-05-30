@@ -1,0 +1,38 @@
+{
+  "name": "order-web",
+  "host": "192.168.0.101",
+  "port": 8023,
+  "tags":["imooc", "shy", "order", "web"],
+  "goods_srv": {
+    "name": "goods-srv"
+  },
+  "order_srv": {
+    "name": "order-srv"
+  },
+  "inventory_srv":{
+    "name":"inventory-srv"
+  },
+  "jwt": {
+    "signingKey": "lkOGRZIJLSZZD7Nr!0xJYf4uU44l81z%"
+  },
+  "sms": {
+    "apikey": "LTAI5t6qhWgUURgQ5BZdzwCB",
+    "apisecret": "ju34xudfSMOXbTGwVWpVoSNhQIRR92",
+    "expire": 6000
+  },
+  "redis": {
+    "host": "192.168.0.101",
+    "port": 6379
+  },
+  "consul": {
+    "host": "192.168.0.101",
+    "port": 8500
+  },
+  "ali_pay":{
+    "appId":"9021000137653997",
+    "private_key":"MIIEowIBAAKCAQEAjQ1sMKa582jnkJfA8hRFHuvvx8Tc5rb63hvUUJnFoiIX0AsMm08qQI50ebQ+JjLzUIvPg6ZISJdENKrDbLHU4+XRjMcPtqON42MSFnFUcBspEABR1r5xL/Z4Lijk7392GfgOe2R6aQ2BhsBM1tcIBxRJlggtmGNQaDH1z1f7Mxkr+7FpKCxSsDybGbY63rGawsir+gsR3d8v1Y4C0eDItEAhD3dhi70+8n+xRovpa8dcx9orZLqRVnhOdvzjv0pMSeyyqrYuQMIJDeRtvhmHTMcytnm5bYTT68HEN6SndnGzD4rXIQXTRmUaZOJtPmYeHPTSLIh6dqzVD32UR69t8QIDAQABAoIBAHt/phuOzz8MubtC83/BOafSQhYyCovC6DGyQhn0GTNVEG5qTjZpgQAW+mpY4xWFBL6gOyf0XlOYhfJrFUJFDbYgUXImFF8AIspVws99mMWzMie9b+pKwkWRUjZwPcpoWlpwcxWcqwTx+1elZWGx0miIXcmMDYfgZNVl8OgDC4D3mvw7aFHQXwqNsd6gVR6MMjXhLF3ee8td0iWupaDK9ldvYPZuwRc27V2UTHUW8B0Ntsj6DXytus0UqdgmSQdnjNiEg7Jelvvj9ERNroGXboqxTWy3pvOuykDNkgHJTM0ENcT2apQP764GD+I7t9mnobHtnbFPKK6Zx8ObwCtrCsUCgYEAx7r9PrYRbGVimvQX6Tel37P29esmRqBPtHFrWHTqjjXajjXRfPJ/aXBZ1JD7JmdOoE4EpQiP0VBoaEeJhnacLXX7iro6uS7rXMA/HPG/vVs1Z1aJhHzwh3GSEGBfkJvxCl2sntm+fhePz5qPD4Nszcy5KGEDiuuJLboAg0IJF3MCgYEAtMpxiWR0XWT6jttkolQkfhnxuH1NA42StI6wcXJulCzX74FqgT0eLFxdoSuHHGEmMktMQRNY0QJUjlviu9O0NYlBpvg0I9/YJQX7f1oQKoYLu6unCovFPsBY4vg4cEWoFv9zem87ktlDuKfXO0g8250nvqlNCxJLqE8rPIGz5AsCgYBWaJZhSCF3lNE5GnsxwYp4ooIoWEhh678v4JXBWiuTxMa+GZh9BuiKdDnY1bRiI/WHMtmdkHuv4aqZ2sErtCrTHCTsGq+HKD5ZDS8A1bHPOSN8hprN/8OLxV2cyiTuChkZE/e3bZqVMJpeBY749jHfQz+jsXz33/ikGMFaB/qo8wKBgD6uWcLq4zVmR0C0bCWjyqs1z4rJVqQ+t3iGaEJNDG2vRoaxdf2s9QMoWwYAE24ReK7DUILXdFmy1yIsVWYNtlNBbVO4hktR1pyvgEzdKvGzW+oLT3TmlNJ22dqHePnkDK08kAsI+bymO0aQWp0hJIh36km+ZQnLpBOMr07hIT+VAoGBAJioQTR6SfySJUa/fV8nYAsXs3UErww/5izutJci3rkYrCiAFzO9h7I6ocjdN+4OB07tXEIdYLWcW6LvOx8Pvr8pFnHqRKXxRg2HknkUH157N6UQeF2lTjnQ2VAeXBv/kr6xjixguXECTrW1QFQtD0Ornv3eL5ng2FFi75+UYNbb",
+    "ali_public_key":"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxY/z02PId2SP0KHrP8J6SXiPvRedc6ZYB0XKfqJ/TNpMliFtr9mufSte/0Z51fUK9hW1PC6jhGgIQ4o4mjuIfWYz4696bH2VYjGxnKX95oubH/GriLm+U9NDjZXGEviFUc0zKbA8FbSb1lT1Oygb5h8CLneqwism3CsHR2RXoPEJWfGZ7Nb6rHwjaj/SJz0jQsdRC4It6HE4ydSLHJ1E6bhaTu4W8eLDg30O0ScZ3ZXh2vNYdPZa09A0bniXcLkXKLbfsl8SK4f924x94AGeinMgQsWs9kRNrX2HXw/7G9pTr/OdXabJIggbrwRdxKcAMIIZFgkHBBjAAjuscsZhSQIDAQAB",
+    "notify_url":"127.0.0.1:8023/o/v1/orders/notify",
+    "return_url":"127.0.0.1:8023"
+  }
+}
