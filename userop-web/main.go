@@ -2,17 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin/binding"
-	ut "github.com/go-playground/universal-translator"
-	"github.com/go-playground/validator/v10"
 	"github.com/satori/go.uuid"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
-	"mxshop-api/user-web/global"
-	"mxshop-api/user-web/initialize"
-	"mxshop-api/user-web/utils"
-	"mxshop-api/user-web/utils/register/consul"
-	myvalidator "mxshop-api/user-web/validator"
+	"mxshop-api/userop-web/global"
+	"mxshop-api/userop-web/initialize"
+	"mxshop-api/userop-web/utils"
+	"mxshop-api/userop-web/utils/register/consul"
 	"os"
 	"os/signal"
 	"syscall"
@@ -48,18 +44,6 @@ func main() {
 	//5.初始化连接consul服务
 	initialize.InitSrvConn()
 
-	// 注册自定义验证器
-	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
-		_ = v.RegisterValidation("mobile", myvalidator.ValidateMobile)
-		_ = v.RegisterTranslation("mobile", global.Trans, func(ut ut.Translator) error {
-			return ut.Add("mobile", "{0} 非法的手机号码!", true) // see universal-translator for details
-		}, func(ut ut.Translator, fe validator.FieldError) string {
-			//基于自定义mobile标签 创建一个翻译器
-			t, _ := ut.T("mobile", fe.Field())
-			return t
-		})
-	}
-
 	//用zap.S()代替
 
 	//logger, _ := zap.NewProduction()
@@ -90,7 +74,6 @@ func main() {
 	if err != nil {
 		zap.S().Panic("服务注册失败：", err.Error())
 	}
-
 	zap.S().Debugf("启动服务器，端口：%d", global.ServerConfig.Port)
 
 	go func() {

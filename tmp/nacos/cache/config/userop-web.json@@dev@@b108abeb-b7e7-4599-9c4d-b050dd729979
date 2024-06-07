@@ -1,16 +1,13 @@
 {
-  "name": "order-web",
+  "name": "userop-web",
   "host": "192.168.0.101",
   "port": 8023,
-  "tags":["imooc", "shy", "order", "web"],
+  "tags":["imooc", "shy", "userop", "web"],
   "goods_srv": {
     "name": "goods-srv"
   },
-  "order_srv": {
-    "name": "order-srv"
-  },
-  "inventory_srv":{
-    "name":"inventory-srv"
+  "userop_srv": {
+    "name": "userop-srv"
   },
   "jwt": {
     "signingKey": "lkOGRZIJLSZZD7Nr!0xJYf4uU44l81z%"
@@ -27,11 +24,5 @@
   "consul": {
     "host": "192.168.0.101",
     "port": 8500
-  },
-  "ali_pay":{
-    "appId":"",
-    "private_key":"",
-    "ali_public_key":"",
-    "return_url":"127.0.0.1:8023"
   }
 }

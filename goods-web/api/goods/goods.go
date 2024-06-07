@@ -80,9 +80,41 @@ func List(ctx *gin.Context) {
 	priceMinInt, _ := strconv.Atoi(priceMin)
 	request.PriceMin = int32(priceMinInt)
 
-	topCategory := ctx.DefaultQuery("topCategory", "0")
-	topCategoryInt, _ := strconv.Atoi(topCategory)
-	request.TopCategory = int32(topCategoryInt)
+	priceMax := ctx.DefaultQuery("pmax", "0")
+	priceMaxInt, _ := strconv.Atoi(priceMax)
+	request.PriceMax = int32(priceMaxInt)
+
+	isHot := ctx.DefaultQuery("ih", "0")
+	if isHot == "1" {
+		request.IsHot = true
+	}
+	isNew := ctx.DefaultQuery("in", "0")
+	if isNew == "1" {
+		request.IsNew = true
+	}
+
+	isTab := ctx.DefaultQuery("it", "0")
+	if isTab == "1" {
+		request.IsTab = true
+	}
+	categoryId := ctx.DefaultQuery("c", "0")
+	categoryIdInt, _ := strconv.Atoi(categoryId)
+	request.TopCategory = int32(categoryIdInt)
+
+	pages := ctx.DefaultQuery("p", "0")
+	pagesInt, _ := strconv.Atoi(pages)
+	request.Pages = int32(pagesInt)
+
+	perNums := ctx.DefaultQuery("pnum", "0")
+	perNumsInt, _ := strconv.Atoi(perNums)
+	request.PagePerNums = int32(perNumsInt)
+
+	keywords := ctx.DefaultQuery("q", "")
+	request.KeyWords = keywords
+
+	brandId := ctx.DefaultQuery("b", "0")
+	brandIdInt, _ := strconv.Atoi(brandId)
+	request.Brand = int32(brandIdInt)
 
 	resp, err := global.GoodsSrvClient.GoodsList(context.Background(), &request)
 	if err != nil {

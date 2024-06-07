@@ -8,7 +8,7 @@ import (
 )
 
 func InitGoodsRouter(Router *gin.RouterGroup) {
-	GoodsRouter := Router.Group("/order")
+	GoodsRouter := Router.Group("/goods")
 	zap.S().Info("配置商品相关的日志")
 	{
 		GoodsRouter.GET("/list", goods.List)
