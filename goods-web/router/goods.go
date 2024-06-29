@@ -8,7 +8,7 @@ import (
 )
 
 func InitGoodsRouter(Router *gin.RouterGroup) {
-	GoodsRouter := Router.Group("/goods")
+	GoodsRouter := Router.Group("/goods").Use(middlewares.Trace())
 	zap.S().Info("配置商品相关的日志")
 	{
 		GoodsRouter.GET("/list", goods.List)

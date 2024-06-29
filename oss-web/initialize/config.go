@@ -31,11 +31,11 @@ func InitConfig() {
 	//文件的路径如何设置
 	v.SetConfigFile(configFileName)
 	if err := v.ReadInConfig(); err != nil {
-		panic(err)
+		panic(any(err))
 	}
 	//这个对象如何在其他文件中使用 - 全局变量
 	if err := v.Unmarshal(global.NacosConfig); err != nil {
-		panic(err)
+		panic(any(err))
 	}
 	zap.S().Infof("配置信息: &v", global.NacosConfig)
 
@@ -63,7 +63,7 @@ func InitConfig() {
 		"clientConfig":  cc,
 	})
 	if err != nil {
-		panic(err)
+		panic(any(err))
 	}
 
 	content, err := configClient.GetConfig(vo.ConfigParam{
@@ -71,7 +71,7 @@ func InitConfig() {
 		Group:  global.NacosConfig.Group})
 
 	if err != nil {
-		panic(err)
+		panic(any(err))
 	}
 	fmt.Println("这是content", content)
 	//fmt.Println(content) //字符串 - yaml

@@ -1,7 +1,7 @@
 {
   "name": "userop-web",
   "host": "192.168.0.101",
-  "port": 8023,
+  "port": 8028,
   "tags":["imooc", "shy", "userop", "web"],
   "goods_srv": {
     "name": "goods-srv"

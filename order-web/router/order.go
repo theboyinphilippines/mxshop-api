@@ -5,10 +5,11 @@ import (
 	"go.uber.org/zap"
 	"mxshop-api/order-web/api/order"
 	"mxshop-api/order-web/api/pay"
+	"mxshop-api/order-web/middlewares"
 )
 
 func InitOrderRouter(Router *gin.RouterGroup) {
-	OrderRouter := Router.Group("/orders")
+	OrderRouter := Router.Group("/orders").Use(middlewares.Tracer())
 	zap.S().Info("配置订单相关的日志")
 	{
 		OrderRouter.GET("", order.List)        //购物车列表

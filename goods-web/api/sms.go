@@ -39,7 +39,7 @@ func SendSms(c *gin.Context) {
 
 	client, err := dysmsapi.NewClientWithAccessKey("cn-beijing", global.ServerConfig.AliSmsInfo.ApiKey, global.ServerConfig.AliSmsInfo.ApiSecret)
 	if err != nil {
-		panic(err)
+		panic(any(err))
 	}
 	smsCode := GenerateSmsCode(6)
 	request := requests.NewCommonRequest()

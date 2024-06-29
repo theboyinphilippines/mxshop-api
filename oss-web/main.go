@@ -25,7 +25,7 @@ func main() {
 	Router := initialize.Routers()
 	//4. 初始化翻译
 	if err := initialize.InitTrans("zh"); err != nil {
-		panic(err)
+		panic(any(err))
 	}
 
 	viper.AutomaticEnv()

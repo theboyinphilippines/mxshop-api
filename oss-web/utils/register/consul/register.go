@@ -29,7 +29,7 @@ func (r *Registry) Register(address string, port int, name string, tags []string
 
 	client, err := api.NewClient(cfg)
 	if err != nil {
-		panic(err)
+		panic(any(err))
 	}
 	//生成对应的检查对象
 	check := &api.AgentServiceCheck{
@@ -50,7 +50,7 @@ func (r *Registry) Register(address string, port int, name string, tags []string
 
 	err = client.Agent().ServiceRegister(registration)
 	if err != nil {
-		panic(err)
+		panic(any(err))
 	}
 	return nil
 }

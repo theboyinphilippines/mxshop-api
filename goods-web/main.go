@@ -43,6 +43,8 @@ func main() {
 
 	//5.初始化连接consul服务
 	initialize.InitSrvConn()
+	//初始化sentinel
+	initialize.InitSentinel()
 
 	//用zap.S()代替
 

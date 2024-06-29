@@ -26,6 +26,7 @@ func InitSrvConn() {
 	userSrvClient := proto.NewUserClient(userConn)
 	global.UserSrvClient = userSrvClient
 }
+
 // 客户端没用负载均衡连接consul的代码
 func InitSrvConn2() {
 	// 从注册中心获取到用户服务的信息
@@ -39,7 +40,7 @@ func InitSrvConn2() {
 
 	client, err := api.NewClient(cfg)
 	if err != nil {
-		panic(err)
+		panic(any(err))
 	}
 	data, err := client.Agent().ServicesWithFilter(fmt.Sprintf(`Service==%s`, global.ServerConfig.UserSrvInfo.Name))
 	if err != nil {

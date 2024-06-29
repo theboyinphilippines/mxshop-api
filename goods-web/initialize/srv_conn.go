@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"github.com/hashicorp/consul/api"
 	_ "github.com/mbobakov/grpc-consul-resolver" // It's important
+	"github.com/opentracing/opentracing-go"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"mxshop-api/goods-web/global"
 	"mxshop-api/goods-web/proto"
+	"mxshop-api/goods-web/utils/otgrpc"
 )
 
 // 从consul中服务发现
@@ -19,6 +21,7 @@ func InitSrvConn() {
 			global.ServerConfig.ConsulInfo.Port, global.ServerConfig.GoodsSrvInfo.Name),
 		grpc.WithInsecure(),
 		grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy": "round_robin"}`),
+		grpc.WithUnaryInterceptor(otgrpc.OpenTracingClientInterceptor(opentracing.GlobalTracer())),
 	)
 	if err != nil {
 		zap.S().Fatal("[InitSrvConn] 连接【商品服务失败】")
@@ -41,7 +44,7 @@ func InitSrvConn2() {
 
 	client, err := api.NewClient(cfg)
 	if err != nil {
-		panic(err)
+		panic(any(err))
 	}
 	data, err := client.Agent().ServicesWithFilter(fmt.Sprintf(`Service==%s`, global.ServerConfig.GoodsSrvInfo.Name))
 	if err != nil {

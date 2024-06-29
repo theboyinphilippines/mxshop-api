@@ -35,13 +35,13 @@ func InitConfig() {
 	v.SetConfigFile(configFileName)
 	zap.S().Infof("配置文件对象为：%v", v)
 	if err := v.ReadInConfig(); err != nil {
-		panic(err)
+		panic(any(err))
 		//zap.S().Errorf("配置文件错误为：%v",err)
 	}
 	// serverConfig对象，其他文件中也要使用配置，所以声明为全局变量
 	//serverConfig := config.ServerConfig{}
 	if err := v.Unmarshal(global.NacosConfig); err != nil {
-		panic(err)
+		panic(any(err))
 	}
 	zap.S().Infof("配置信息：%v", global.NacosConfig)
 	fmt.Printf("服务名称是：%v", v.Get("name"))
@@ -59,7 +59,7 @@ func InitConfig() {
 	serverConfigs := []constant.ServerConfig{
 		{
 			IpAddr: global.NacosConfig.Host,
-			Port: global.NacosConfig.Port,
+			Port:   global.NacosConfig.Port,
 		},
 	}
 
@@ -79,7 +79,7 @@ func InitConfig() {
 		"clientConfig":  clientConfig,
 	})
 	if err != nil {
-		panic(err)
+		panic(any(err))
 	}
 
 	content, err := configClient.GetConfig(vo.ConfigParam{
@@ -87,16 +87,15 @@ func InitConfig() {
 		Group:  global.NacosConfig.Group})
 
 	if err != nil {
-		panic(err)
+		panic(any(err))
 	}
 
 	//将从nacos中获取的配置数据绑定到结构体中
 	fmt.Println("这是content", content)
-	err = json.Unmarshal([]byte(content),&global.ServerConfig)
-	if err != nil{
+	err = json.Unmarshal([]byte(content), &global.ServerConfig)
+	if err != nil {
 		zap.S().Fatalf("读取nacos配置失败： %s", err.Error())
 	}
-	fmt.Println("这是global.ServerConfig",&global.ServerConfig)
-
+	fmt.Println("这是global.ServerConfig", &global.ServerConfig)
 
 }

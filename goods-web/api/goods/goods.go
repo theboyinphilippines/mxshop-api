@@ -2,8 +2,11 @@ package goods
 
 import (
 	"context"
+	sentinel "github.com/alibaba/sentinel-golang/api"
+	"github.com/alibaba/sentinel-golang/core/base"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/opentracing/opentracing-go"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -13,6 +16,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func HandleGrpcErrorToHttp(err error, c *gin.Context) {
@@ -116,17 +120,40 @@ func List(ctx *gin.Context) {
 	brandIdInt, _ := strconv.Atoi(brandId)
 	request.Brand = int32(brandIdInt)
 
-	resp, err := global.GoodsSrvClient.GoodsList(context.Background(), &request)
+	//tracer, _ := ctx.Get("tracer")
+	//parentSpan,_ := ctx.Get("parentSpan")
+	//goodsListSpan := tracer.(opentracing.Tracer).StartSpan("goodsList",opentracing.ChildOf(parentSpan.(opentracing.Span).Context()))
+	//opentracing.ContextWithSpan(context.Background(),parentSpan.(opentracing.Span))
+
+	//向grpc的客户端拦截器中传入parentSpan和tracer（这2个对象在gin.context的对象中，所以先向拦截器中传入gin.context的对象）
+	//tracer, _ := ctx.Get("tracer")
+	parentSpan, _ := ctx.Get("parentSpan")
+	goodsListSpan := opentracing.GlobalTracer().StartSpan("goodsList", opentracing.ChildOf(parentSpan.(opentracing.Span).Context()))
+	e, b := sentinel.Entry("goods-list", sentinel.WithTrafficType(base.Inbound))
+	if b != nil {
+		ctx.JSON(http.StatusTooManyRequests, gin.H{
+			"msg": "请求频繁，请稍后重试",
+		})
+	}
+	resp, err := global.GoodsSrvClient.GoodsList(context.WithValue(context.Background(), "ginContext", ctx), &request)
 	if err != nil {
 		zap.S().Errorw("[List] 【用户列表】失败")
 		// 失败后，响应失败数据，将grpc的失败code转换为http的状态码
 		HandleGrpcErrorToHttp(err, ctx)
 		return
 	}
+	e.Exit()
+	goodsListSpan.Finish()
+
+	//创建另外一个子span，模拟
+	goodsListSpan2 := opentracing.GlobalTracer().StartSpan("goodsList 2", opentracing.ChildOf(parentSpan.(opentracing.Span).Context()))
+	time.Sleep(500 * time.Millisecond)
+	goodsListSpan2.Finish()
+
 	ctx.JSON(http.StatusOK, resp)
 }
 
-//创建商品
+// 创建商品
 func New(ctx *gin.Context) {
 	var goodsForm forms.GoodsForm
 	err := ctx.ShouldBindJSON(&goodsForm)
@@ -157,7 +184,7 @@ func New(ctx *gin.Context) {
 
 }
 
-//商品详情
+// 商品详情
 func Detail(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	idInt, err := strconv.Atoi(idStr)
@@ -165,7 +192,12 @@ func Detail(ctx *gin.Context) {
 		ctx.Status(http.StatusNotFound)
 		return
 	}
-
+	e, b := sentinel.Entry("goods-detail", sentinel.WithTrafficType(base.Inbound))
+	if b != nil {
+		ctx.JSON(http.StatusTooManyRequests, gin.H{
+			"msg": "请求频繁，请稍后重试",
+		})
+	}
 	rsp, err := global.GoodsSrvClient.GetGoodsDetail(context.Background(), &proto.GoodInfoRequest{
 		Id: int32(idInt),
 	})
@@ -173,6 +205,7 @@ func Detail(ctx *gin.Context) {
 		HandleGrpcErrorToHttp(err, ctx)
 		return
 	}
+	e.Exit()
 	ctx.JSON(http.StatusOK, rsp)
 	rspMap := map[string]interface{}{
 		"id":          rsp.Id,
@@ -198,7 +231,7 @@ func Detail(ctx *gin.Context) {
 
 }
 
-//商品删除
+// 商品删除
 func Delete(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	idInt, err := strconv.Atoi(idStr)
@@ -229,7 +262,7 @@ func Stocks(ctx *gin.Context) {
 	//TODO 商品库存
 }
 
-//更新状态 IsNew, isHot, onSale （部分更新）
+// 更新状态 IsNew, isHot, onSale （部分更新）
 func Update(ctx *gin.Context) {
 	var goodsForm forms.GoodsForm
 	err := ctx.ShouldBindJSON(&goodsForm)
