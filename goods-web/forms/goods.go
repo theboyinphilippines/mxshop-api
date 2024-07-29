@@ -1,5 +1,9 @@
 package forms
 
+import (
+	"errors"
+)
+
 type GoodsForm struct {
 	Name        string   `form:"name" json:"name" binding:"required,min=2,max=100"`
 	GoodsSn     string   `form:"goods_sn" json:"goods_sn" binding:"required,min=2,lt=20"`
@@ -13,6 +17,18 @@ type GoodsForm struct {
 	ShipFree    *bool    `form:"ship_free" json:"ship_free" binding:"required"`
 	FrontImage  string   `form:"front_image" json:"front_image" binding:"required,url"`
 	Brand       int32    `form:"brand" json:"brand" binding:"required"`
+}
+
+// 自定义参数校验
+func (gf *GoodsForm) Validate() []error {
+	var errs []error
+	if gf.Name == "" {
+		errs = append(errs, errors.New("name cannot be empty"))
+	}
+	if len(gf.GoodsSn) < 2 {
+		errs = append(errs, errors.New("goodsSn should be at least 2 characters long"))
+	}
+	return errs
 }
 
 type GoodsStatusForm struct {
