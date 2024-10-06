@@ -12,6 +12,7 @@ func InitGoodsRouter(Router *gin.RouterGroup) {
 	zap.S().Info("配置商品相关的日志")
 	{
 		GoodsRouter.GET("/list", goods.List)
+		GoodsRouter.GET("/mocklist", goods.MockList)
 		GoodsRouter.POST("/new", middlewares.JWTAuth(), middlewares.IsAdminAuth(), goods.New)
 		GoodsRouter.GET("/detail/:id", goods.Detail)
 		GoodsRouter.DELETE("delete/:id", middlewares.JWTAuth(), middlewares.IsAdminAuth(), goods.Delete)

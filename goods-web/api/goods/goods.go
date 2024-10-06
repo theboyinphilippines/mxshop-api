@@ -2,6 +2,7 @@ package goods
 
 import (
 	"context"
+	"errors"
 	sentinel "github.com/alibaba/sentinel-golang/api"
 	"github.com/alibaba/sentinel-golang/core/base"
 	"github.com/gin-gonic/gin"
@@ -137,6 +138,81 @@ func List(ctx *gin.Context) {
 	}
 	resp, err := global.GoodsSrvClient.GoodsList(context.WithValue(context.Background(), "ginContext", ctx), &request)
 	if err != nil {
+		zap.S().Errorw("[List] 【用户列表】失败")
+		// 失败后，响应失败数据，将grpc的失败code转换为http的状态码
+		HandleGrpcErrorToHttp(err, ctx)
+		return
+	}
+	e.Exit()
+	goodsListSpan.Finish()
+
+	//创建另外一个子span，模拟
+	goodsListSpan2 := opentracing.GlobalTracer().StartSpan("goodsList 2", opentracing.ChildOf(parentSpan.(opentracing.Span).Context()))
+	time.Sleep(500 * time.Millisecond)
+	goodsListSpan2.Finish()
+
+	ctx.JSON(http.StatusOK, resp)
+}
+func MockList(ctx *gin.Context) {
+	var request proto.GoodsFilterRequest
+	priceMin := ctx.DefaultQuery("pmin", "0")
+	priceMinInt, _ := strconv.Atoi(priceMin)
+	request.PriceMin = int32(priceMinInt)
+
+	priceMax := ctx.DefaultQuery("pmax", "0")
+	priceMaxInt, _ := strconv.Atoi(priceMax)
+	request.PriceMax = int32(priceMaxInt)
+
+	isHot := ctx.DefaultQuery("ih", "0")
+	if isHot == "1" {
+		request.IsHot = true
+	}
+	isNew := ctx.DefaultQuery("in", "0")
+	if isNew == "1" {
+		request.IsNew = true
+	}
+
+	isTab := ctx.DefaultQuery("it", "0")
+	if isTab == "1" {
+		request.IsTab = true
+	}
+	categoryId := ctx.DefaultQuery("c", "0")
+	categoryIdInt, _ := strconv.Atoi(categoryId)
+	request.TopCategory = int32(categoryIdInt)
+
+	pages := ctx.DefaultQuery("p", "0")
+	pagesInt, _ := strconv.Atoi(pages)
+	request.Pages = int32(pagesInt)
+
+	perNums := ctx.DefaultQuery("pnum", "0")
+	perNumsInt, _ := strconv.Atoi(perNums)
+	request.PagePerNums = int32(perNumsInt)
+
+	keywords := ctx.DefaultQuery("q", "")
+	request.KeyWords = keywords
+
+	brandId := ctx.DefaultQuery("b", "0")
+	brandIdInt, _ := strconv.Atoi(brandId)
+	request.Brand = int32(brandIdInt)
+
+	//tracer, _ := ctx.Get("tracer")
+	//parentSpan,_ := ctx.Get("parentSpan")
+	//goodsListSpan := tracer.(opentracing.Tracer).StartSpan("goodsList",opentracing.ChildOf(parentSpan.(opentracing.Span).Context()))
+	//opentracing.ContextWithSpan(context.Background(),parentSpan.(opentracing.Span))
+
+	//向grpc的客户端拦截器中传入parentSpan和tracer（这2个对象在gin.context的对象中，所以先向拦截器中传入gin.context的对象）
+	//tracer, _ := ctx.Get("tracer")
+	parentSpan, _ := ctx.Get("parentSpan")
+	goodsListSpan := opentracing.GlobalTracer().StartSpan("goodsList", opentracing.ChildOf(parentSpan.(opentracing.Span).Context()))
+	e, b := sentinel.Entry("abc")
+	if b != nil {
+		ctx.JSON(http.StatusTooManyRequests, gin.H{
+			"msg": "请求频繁，请稍后重试",
+		})
+	}
+	resp, err := global.GoodsSrvClient.GoodsList(context.WithValue(context.Background(), "ginContext", ctx), &request)
+	if err != nil {
+		sentinel.TraceError(e, errors.New("biz error"))
 		zap.S().Errorw("[List] 【用户列表】失败")
 		// 失败后，响应失败数据，将grpc的失败code转换为http的状态码
 		HandleGrpcErrorToHttp(err, ctx)

@@ -2,6 +2,7 @@ package initialize
 
 import (
 	sentinel "github.com/alibaba/sentinel-golang/api"
+	"github.com/alibaba/sentinel-golang/core/circuitbreaker"
 	"github.com/alibaba/sentinel-golang/core/flow"
 	"log"
 )
@@ -42,4 +43,20 @@ func InitSentinel() {
 	//		e.Exit()
 	//	}
 	//}
+
+	_, err = circuitbreaker.LoadRules([]*circuitbreaker.Rule{
+		// Statistic time span=5s, recoveryTimeout=3s, maxErrorCount=50
+		{
+			Resource:         "abc",
+			Strategy:         circuitbreaker.ErrorCount,
+			RetryTimeoutMs:   3000, //3s之后尝试恢复
+			MinRequestAmount: 10,   //静默数，10个请求以内全部通过
+			StatIntervalMs:   5000, //5s统计一次
+			Threshold:        50,   //错误数不超过50个
+		},
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+
 }
